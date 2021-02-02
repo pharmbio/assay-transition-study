@@ -1,0 +1,75 @@
+<project name="assay-transition" basedir="." default="main">
+
+	<property name="target-jvm" value="1.8" />
+	<property name="src.dir" value="src" />
+
+	<property name="build.dir" value="build" />
+	
+	<property name="classes.dir" value="${build.dir}/classes" />
+	<property name="jar.dir" value="${build.dir}/jar" />
+	<property name="lib.dir" value="lib" />
+
+	<property name="version" value="0.1.5" />
+	<property name="jar.name" value="${ant.project.name}-${version}-no-deps.jar" />
+	<property name="jar-withdeps.name" value="${ant.project.name}-${version}.jar" />
+	
+	
+	<path id="classpath">
+		<fileset dir="${lib.dir}" includes="**/*.jar" />
+	</path>
+
+	<target name="clean">
+		<delete dir="${build.dir}" failonerror="false"/>
+	</target>
+
+	<target name="compile">
+		<mkdir dir="${classes.dir}" />
+		<javac includeantruntime="false" srcdir="${src.dir}" destdir="${classes.dir}" encoding="utf-8" classpathref="classpath" source="${target-jvm}" target="${target-jvm}" />
+	</target>
+	
+	
+	<target name="jar" depends="compile">
+		<mkdir dir="${jar.dir}" />
+		<jar destfile="${jar.dir}/${jar.name}" basedir="${classes.dir}">
+			<manifest>
+				<attribute name="Implementation-Version" value="${version}" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="clean-build" depends="clean,dist-large" />
+
+	<target name="main" depends="clean-build" />
+
+	<target id="dist-large" name="dist-large" depends="jar" description="Builds one big jar file for the project, including third-party libraries.">
+
+		<jar destfile="${build.dir}/${jar-withdeps.name}">
+			<manifest>
+				<attribute name="Implementation-Version" value="${version}" />
+				<section name="assay_transition">
+					<attribute name="Specification-Title" value="${ant.project.name}" />
+					<attribute name="Specification-Version" value="${version}" />
+					<attribute name="Specification-Vendor" value="Pharmb.io" />
+					<attribute name="Implementation-Title" value="${ant.project.name}" />
+					<attribute name="Implementation-Version" value="${version}" />
+					<attribute name="Implementation-Vendor" value="Pharmb.io" />
+				</section>
+			</manifest>
+			
+			<zipgroupfileset dir="${build.dir}/jar">
+				<include name="${jar.name}" />
+			</zipgroupfileset>
+			
+			<zipgroupfileset dir="${lib.dir}">
+				<include name="**/*.jar" />
+				<exclude name="**/*-javadoc.jar"/>
+			</zipgroupfileset>
+			<fileset dir="${src.dir}">
+				<include name="resources/**/*" />
+			</fileset>
+		</jar>
+
+	</target>
+	
+
+</project>
