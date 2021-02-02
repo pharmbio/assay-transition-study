@@ -1,5 +1,5 @@
 # Assay Transition study
-Code used for running the experiments of the Assay transition study. The conformal prediction (CP) is handled by the Java library/CLI (CPSign)[https://arosbio.com/] licensed by Aros Bio. 
+Code used for running the experiments of the Assay transition study. The conformal prediction (CP) is handled by the Java library/CLI [CPSign](https://arosbio.com/) licensed by Aros Bio. 
 
 ## Requirements
 There are two things required to compile and run the code on your own dataset;
