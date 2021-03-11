@@ -14,7 +14,7 @@ Here is an example of using the **SR-ARE** endpoint of the publicly available da
 
 ## Results
 
-[Calibration plot](run_output/calibration_plot.pdf) for all sampling strategies.
+[Calibration plot](run_outputs/calibration_plot.pdf) for all sampling strategies.
 
 Efficiency for all sampling strategies:
 | Strategy | Observed Fuzziness  |
