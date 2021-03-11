@@ -11,4 +11,7 @@ There are two things required to compile and run the code on your own dataset;
 Once the two requirements above have been sorted, the runnable JAR can be packaged using the ant build script by simply running `ant` in the java-code folder (assuming you have Ant installed and set up correctly on your machine). 
 
 ## Running experiments
-An example sbash-file of running a single sampling strategy and all combinations of A1 and A2 sizes is supplied in `bash-scripts/run.hERG.classification.sh`. Note that the Java code can run a single A1 size and the loop over different A1 sizes is performed in bash - while the loop over different A2 sizes is handled by the Java code. Appropriate changes can be done to increase / decrese the number of parallel jobs.   
+An example sbash-file of running a single sampling strategy and all combinations of A1 and A2 sizes is supplied in `bash-scripts/run.hERG.classification.sh`. Note that the Java code can run a single A1 size and the loop over different A1 sizes is performed in bash - while the loop over different A2 sizes is handled by the Java code. Appropriate changes can be done to increase / decrese the number of parallel jobs. 
+
+## Example experiment
+See [Tox21 example](tox21_example/README.md) for an example run using a publicly available data set. 
