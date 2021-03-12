@@ -26,7 +26,7 @@ Final data set sizes post processing:
 
 
 ### Calibration 
-Calibration data is shown in the [Calibration plot](run_outputs/calibration_plot.pdf) for all sampling strategies. The calibration of the strategies seems to match well with the results in the paper, with CCP<sub>new</sub>, CCP<sub>AT</sub> and ICP<sub>old</sub><sup>new</sup> being strictly well-calibrated. The remaining strategies are slightly below the desired accuracy for any given confidence. Perhaps due to higher agreement between the "old" and "new" assay data or classification being comparatively easier to model, the drift from being well-calibrated is less pronounced than most of the plots in the paper. 
+Calibration data is shown in the [Calibration plot](run_outputs/calibration_plot.pdf) for all sampling strategies (blue for _inactive_ and red for _active_ compounds). The calibration of the strategies seems to match well with the results in the paper, with CCP<sub>new</sub>, CCP<sub>AT</sub> and ICP<sub>old</sub><sup>new</sup> being strictly well-calibrated. The remaining strategies are slightly below the desired accuracy for all confidence values. Perhaps due to higher agreement between the "old" and "new" assay data or classification being comparatively easier to model, the drift from being well-calibrated is less pronounced than most of the experiments presented in the paper. 
 
 
 ### Efficiency
