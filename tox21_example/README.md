@@ -6,7 +6,7 @@ Here is an example of using the **SR-ARE** endpoint of the publicly available da
 - The runnable JAR of the project, again outlined in the main [README](../README.md).
 
 ## Basic pipeline
-1. Data files were downloaded from [Tox21 data challenge website](https://tripod.nih.gov/tox21/challenge/data.jsp#) and saved in [resources](resources) folder.
+1. Data files were downloaded from [Tox21 data challenge website](https://tripod.nih.gov/tox21/challenge/) and saved in [resources](resources) folder.
 2. The original dataset (`sr-are.smiles.gz`) was used as `old assay` and the scoring data was used as `new assay` in the terminology of the paper. The python script [get_score_dataset](get_score_dataset.py) was used to merge the files for the scoring dataset, the result saved in `tox21_score.smiles.gz`.
 3. The smiles datasets were used to compute descriptors using the CPSign software and converted them to LIBSVM formatted files which are required by the runnable JAR. The code needed to do this step and handling duplicate records can be found in [PreprocessDatasets.java](src/code/PreprocessDatasets.java).
 4. The experiments are then runned using the bash script [run-exp.sh](run-exp.sh), which outputs some CSV files.
@@ -14,11 +14,26 @@ Here is an example of using the **SR-ARE** endpoint of the publicly available da
 
 ## Results
 
-[Calibration plot](run_outputs/calibration_plot.pdf) for all sampling strategies.
+### Data 
+Final data set sizes post processing:
 
-Efficiency for all sampling strategies:
+| Data set | Number of compounds |
+| -------- | ------------------: |
+| SR-ARE train (_active_) | 902 |
+| SR-ARE train (_inactive_) | 4827 |
+| SR-ARE score (_active_) | 92 |
+| SR-ARE score (_inactive_) | 457 |
+
+
+### Calibration 
+Calibration data is shown in the [Calibration plot](run_outputs/calibration_plot.pdf) for all sampling strategies. The calibration of the strategies seems to match well with the results in the paper, with CCP<sub>new</sub>, CCP<sub>AT</sub> and ICP<sub>old</sub><sup>new</sup> being strictly well-calibrated. The remaining strategies are slightly below the desired accuracy for any given confidence. Perhaps due to higher agreement between the "old" and "new" assay data or classification being comparatively easier to model, the drift from being well-calibrated is less pronounced than most of the plots in the paper. 
+
+
+### Efficiency
+Efficiency for all sampling strategies, using the Observed Fuzziness metric is shown in the table below. Smaller numbers are preferable.
+
 | Strategy | Observed Fuzziness  |
-| ---------- |------------------------:|
+| -------- | ------------------: |
 | CCP<sub>new</sub> | 0.342 |
 | CCP<sub>AT</sub> | 0.285 |
 | ICP<sub>old</sub><sup>new</sup> | 0.282 |
@@ -26,4 +41,4 @@ Efficiency for all sampling strategies:
 | CCP<sub>old</sub> | 0.253 |
 | CCP<sub>AT2</sub> | 0.267 |
 
-The calibration of the strategies seems to match well with the results found in the paper, with CCP<sub>new</sub>, CCP<sub>AT</sub> and ICP<sub>old</sub><sup>new</sup> being strictly well-calibrated. The remaining strategies are slightly below the desired accuracy for any given confidence. Perhaps due to higher agreement between the "old" and "new" assay data or classification being comparatively easier to model, the drift from being well-calibrated is less pronounced than most of the plots in the paper.  
+ Here it is noticable that exclusively using "new" data produces less informative (efficient) models. If requiring strictly well-calibrated models either the CCP<sub>AT</sub> or ICP<sub>old</sub><sup>new</sup> strategies should be used. 
