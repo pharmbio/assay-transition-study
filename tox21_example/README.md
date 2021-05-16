@@ -1,5 +1,5 @@
 # Tox21 Example 
-Here is an example of using the **SR-ARE** endpoint of the publicly available data sets supplied in the [Tox21 data challenge](https://tripod.nih.gov/tox21/challenge/data.jsp#). This data does not have the same background as the data used in our study, as the experimental setups were not replaced at any time, but an investigation of the [calibration of the models indicate an assay drift](https://jcheminf.biomedcentral.com/articles/10.1186/s13321-021-00511-5) so it could serve as a proxy for a similar problem that we are addressing. Further note that this example experiment is simplified, with a single seed used, a single *k*-fold cross-validation and with no parameter-tuning. The sole purpose is to validate our findings in the paper and to supply the foundation for someone else to run their own tests using our work.
+Here is an example of using the **SR-ARE** and **NH-AhR** endpoints from the publicly available data sets supplied in the [Tox21 data challenge](https://tripod.nih.gov/tox21/challenge/data.jsp#). This data does not have the same background as the data used in our study, as the experimental setups were not replaced at any time, but an investigation of the [calibration of the models indicate an assay drift](https://jcheminf.biomedcentral.com/articles/10.1186/s13321-021-00511-5) so it could serve as a proxy for a similar problem that we are addressing. Further note that this example experiment is simplified, with a single seed used, a single *k*-fold cross-validation and with no parameter-tuning. The sole purpose is to validate our findings in the paper and to supply the foundation for someone else to run their own tests using our work.
 
 ## Requirements to replicate
 - A CPSign license, which can be acquired using the info in the main [README](../README.md).
@@ -7,8 +7,8 @@ Here is an example of using the **SR-ARE** endpoint of the publicly available da
 
 ## Basic pipeline
 1. Data files were downloaded from [Tox21 data challenge website](https://tripod.nih.gov/tox21/challenge/) and saved in [resources](resources) folder.
-2. The original dataset (`sr-are.smiles.gz`) was used as `old assay` and the scoring data was used as `new assay` in the terminology of the paper. The python script [get_score_dataset](get_score_dataset.py) was used to merge the files for the scoring dataset, the result saved in `tox21_score.smiles.gz`.
-3. The smiles datasets were used to compute descriptors using the CPSign software and converted them to LIBSVM formatted files which are required by the runnable JAR. The code needed to do this step and handling duplicate records can be found in [PreprocessDatasets.java](src/code/PreprocessDatasets.java).
+2. The original datasets (`sr-are.smiles.gz` and `nh-ahr.smiles.gz`) was used as `old assay` and their corresponding scoring data was used as `new assay` in the terminology of the paper. The python script [get_score_dataset](get_score_dataset.py) was used to merge the files for the scoring dataset, the result saved in `tox21_score.smiles.gz`.
+3. The smiles datasets were used to compute descriptors using the CPSign software and convert them to LIBSVM formatted files which are required by the runnable JAR. The code needed to do this step and handling duplicate records can be found in [PreprocessDatasets.java](src/code/PreprocessDatasets.java).
 4. The experiments are then runned using the bash script [run-exp.sh](run-exp.sh), which outputs some CSV files.
 5. R was then used for generating calibration plots and get the efficiency for each sampling strategy. 
 
@@ -17,28 +17,29 @@ Here is an example of using the **SR-ARE** endpoint of the publicly available da
 ### Data 
 Final data set sizes post processing:
 
-| Data set | Number of compounds |
-| -------- | ------------------: |
-| SR-ARE train (_active_) | 902 |
-| SR-ARE train (_inactive_) | 4827 |
-| SR-ARE score (_active_) | 92 |
-| SR-ARE score (_inactive_) | 457 |
+| Data set           | Number of compounds (SR-ARE) | Number of compunds (NR-AhR) |
+| ------------------ | ---------------------------: | --------------------------: |
+| train (_active_)   |                          902 |                         735 |
+| train (_inactive_) |                         4827 |                        5720 |
+| score (_active_)   |                           92 |                          71 |
+| score (_inactive_) |                          457 |                         533 |
+
 
 
 ### Calibration 
-Calibration data is shown in the [Calibration plot](run_outputs/calibration_plot.pdf) for all sampling strategies (blue for _inactive_ and red for _active_ compounds). The calibration of the strategies seems to match well with the results in the paper, with CCP<sub>new</sub>, CCP<sub>AT</sub> and ICP<sub>old</sub><sup>new</sup> being strictly well-calibrated. The remaining strategies are slightly below the desired accuracy for all confidence values. Perhaps due to higher agreement between the "old" and "new" assay data or classification being comparatively easier to model, the drift from being well-calibrated is less pronounced than most of the experiments presented in the paper. 
+Calibration data is shown in [Calibration plot SR-ARE](run_outputs/calibration_plot.SR-ARE.pdf) and [Calibration plot NR-AhR](run_outputs/calibration_plot.NH-AhR.pdf) for all sampling strategies (blue for _inactive_ and red for _active_ compounds). The calibration of the strategies seems to match well with the results in the paper, with CCP<sub>new</sub>, CCP<sub>AT</sub> and ICP<sub>old</sub><sup>new</sup> being strictly well-calibrated for both endpoints. The remaining strategies are below the desired accuracy for most confidence values. Perhaps due to higher agreement between the "old" and "new" assay data (data from the datasets were generated by the same experimental setups) or classification being comparatively easier to model, the drift from being well-calibrated is less pronounced than most of the experiments presented in the paper. 
 
 
 ### Efficiency
 Efficiency for all sampling strategies, using the Observed Fuzziness metric is shown in the table below. Smaller numbers are preferable.
 
-| Strategy | Observed Fuzziness  |
-| -------- | ------------------: |
-| CCP<sub>new</sub> | 0.342 |
-| CCP<sub>AT</sub> | 0.285 |
-| ICP<sub>old</sub><sup>new</sup> | 0.282 |
-| CCP<sub>pool</sub> | 0.241 |
-| CCP<sub>old</sub> | 0.253 |
-| CCP<sub>AT2</sub> | 0.267 |
+| Strategy                        | Observed Fuzziness (SR-ARE) | Observed Fuzziness (NR-AhR) |
+| ------------------------------- | --------------------------: | --------------------------: |
+| CCP<sub>new</sub>               |                       0.342 |                       0.270 |
+| CCP<sub>AT</sub>                |                       0.285 |                       0.214 |
+| ICP<sub>old</sub><sup>new</sup> |                       0.282 |                       0.145 |
+| CCP<sub>pool</sub>              |                       0.241 |                       0.163 |
+| CCP<sub>old</sub>               |                       0.253 |                       0.163 |
+| CCP<sub>AT2</sub>               |                       0.267 |                       0.152 |
 
- Here it is noticable that exclusively using "new" data produces less informative (efficient) models. If requiring strictly well-calibrated models either the CCP<sub>AT</sub> or ICP<sub>old</sub><sup>new</sup> strategies should be used. 
+ Here it is noticable that exclusively using "new" data for endpoint SR-ARE produces less informative (efficient) models. If requiring strictly well-calibrated models either the CCP<sub>AT</sub> or ICP<sub>old</sub><sup>new</sup> strategies should be used. For the NR-AhR endpoint it is clearly the ICP<sub>old</sub><sup>new</sup> that produces both the best calibration and efficiency, while CCP<sub>AT</sub> produces well-calibrated results and improved efficiency compared to only using new data (CCP<sub>new</sub> strategy), while the remaining strategies produces poorly calibrated predictions.

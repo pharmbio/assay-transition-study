@@ -1,12 +1,14 @@
 # R Script needed to create the calibration plot and to aggregate the efficiency scores
 # Note that you need to update the "TODO"s for the script to run 
 
-library(dplyr)
+library(plyr)
 library(ggplot2)
 library(ggpubr)
 library(cowplot)
 library(gridExtra)
 library(ggsci)
+
+ds_name <- "NR-AhR"
 
 # Utility stuff
 color_class0 <- "blue"
@@ -30,7 +32,8 @@ my_default_color_palette <- pal_npg()
 my_default_color_list <- my_default_color_palette(6)
 
 # Load all data from CSV files
-filenames <- Sys.glob("TODO/tox21_example/run_outputs/strat*.csv")
+filenames <- Sys.glob(paste0("TODO/tox21_example/run_outputs/strat*",ds_name,".csv"))
+
 
 all_data = ldply(filenames, function(filename) {
   return(read.csv(filename, header=TRUE))
@@ -63,7 +66,7 @@ calib_plot <- ggplot(data,
 
 calib_plot
 
-ggsave("TODO/tox21_example/run_outputs/calibration_plot.pdf",
+ggsave(paste0("TODO/tox21_example/run_outputs/calibration_plot.",ds_name,".pdf"),
        plot = calib_plot,
        device = "pdf",
        units = "in",

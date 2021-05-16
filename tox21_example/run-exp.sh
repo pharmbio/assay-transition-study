@@ -1,10 +1,11 @@
 #!/bin/bash -l
 
-A1_path="resources/train.svm.gz"
-A2_path="resources/score.svm.gz"
+ENDPOINT="NR-AhR"
+A1_path="resources/train.$ENDPOINT.svm.gz"
+A2_path="resources/score.$ENDPOINT.svm.gz"
 JAR="../java-code/build/assay-transition-0.1.5.jar"
-BASE_LOG_DIR="run_outputs/logs"
-BASE_RES_DIR="run_outputs"
+BASE_LOG_DIR="run_outputs_$ENDPOINT/logs"
+BASE_RES_DIR="run_outputs_$ENDPOINT"
 SEED=123456789
 
 mkdir -p $BASE_RES_DIR
@@ -15,9 +16,9 @@ for STRATEGY in 1 2 3 4 5 6
 do
     
     
-    LOG="${BASE_LOG_DIR}/log.strat=${STRATEGY}.txt"
+    LOG="${BASE_LOG_DIR}/log.strat=${STRATEGY}.$ENDPOINT.txt"
     
-    RESULT_FILE="${BASE_RES_DIR}/strat=${STRATEGY}.csv"
+    RESULT_FILE="${BASE_RES_DIR}/strat=${STRATEGY}.$ENDPOINT.csv"
     
     java -Xmx4g -cp $JAR evaluateDatasets.ClassificationCLI \
         -st $STRATEGY \
